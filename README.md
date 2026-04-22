@@ -1,20 +1,42 @@
-# ZENITH C++
+<h1 align="center">ZENITH C++</h1>
 
-> A browser-native C++ IDE — compile and run C++ code entirely client-side, no server required.
+<p align="center">A browser-native C++ IDE — compile and run C++ code entirely client-side, no server required.</p>
 
-![Zenith C++ Banner](https://img.shields.io/badge/Architecture-Serverless-blueviolet?style=for-the-badge)
-![Tech-Wasm](https://img.shields.io/badge/Engine-WebAssembly-624DE3?style=for-the-badge&logo=webassembly)
-![Tech-Tailwind](https://img.shields.io/badge/Styles-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css)
-<br>
-![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)
-![Dark Mode](https://img.shields.io/badge/theme-dark-1e293b?style=flat-square)
-![WebAssembly](https://img.shields.io/badge/powered%20by-WebAssembly-654ff0?style=flat-square&logo=webassembly)
+<p align="center">
+  <img src="https://img.shields.io/badge/Architecture-Serverless-blueviolet?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Engine-WebAssembly-624DE3?style=for-the-badge&logo=webassembly" />
+  <img src="https://img.shields.io/badge/Styles-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css" />
+  <br/><br/>
+  <img src="https://img.shields.io/badge/license-MIT-22c55e?style=flat-square" />
+  <img src="https://img.shields.io/badge/theme-dark-1e293b?style=flat-square" />
+  <img src="https://img.shields.io/badge/powered%20by-WebAssembly-654ff0?style=flat-square&logo=webassembly" />
+</p>
 
 ---
 
 ## Overview
 
 Zenith C++ is a fully client-side C++ compiler and execution environment that runs entirely in the browser. It uses Clang/LLVM compiled to WebAssembly as its compilation engine — meaning your code never leaves your machine. Zero backend, zero round-trips.
+
+---
+
+## Screenshots
+
+<h4 align="center"> Desktop View </h4>
+<p align="center">
+  <img width="75%" alt="Zenith C++ Desktop View 1" src="https://github.com/user-attachments/assets/ab57efff-8290-44b8-816f-b8e586e609c2" />
+</p>
+<p align="center">
+  <img width="75%" alt="Zenith C++ Desktop View 2" src="https://github.com/user-attachments/assets/bab09f92-7aa8-4a9e-ba87-9b9695e56f7a" />
+</p>
+
+<h4 align="center"> Mobile View </h4>
+<p align="center">
+  <img width="30%" alt="Zenith C++ Mobile View 1" src="https://github.com/user-attachments/assets/381593ab-6a0e-4eb2-aee9-3724680ac6d0" />
+  &nbsp;&nbsp;
+  <img width="30%" alt="Zenith C++ Mobile View 2" src="https://github.com/user-attachments/assets/4162a976-1aee-423b-8a64-ce73347c5e61" />
+</p>
+
 
 ---
 
