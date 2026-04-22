@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Zenith C++ — A browser-native C++ IDE powered by WebAssembly. Write, compile, and run C++ code entirely in your browser with zero server calls." />
+  <title>Zenith C++ — Browser-Native IDE</title>
+
+  <!-- Xterm.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xterm-addon-web-links@0.9.0/lib/xterm-addon-web-links.js"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════ HEADER ══ -->
+  <header id="app-header">
+
+    <!-- Logo -->
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="11,1 21,19 1,19" fill="none" stroke="#c96442" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="11" y1="7" x2="11" y2="14" stroke="#c96442" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="11" cy="16.5" r="1" fill="#c96442"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-name">Zenith <span class="brand">C++</span></div>
+        <div class="logo-sub">Browser IDE</div>
+      </div>
+    </div>
+
+    <!-- File Tab -->
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div class="file-tab active-tab">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;">
+          <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M10 2v4h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span>main.cpp</span>
+        <span class="dot-unsaved hidden"></span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div style="display:flex;align-items:center;gap:8px;">
+
+      <!-- Status -->
+      <div id="status-indicator" class="status-idle">
+        <span id="status-dot" class="status-dot"></span>
+        <span id="status-text">Ready</span>
+      </div>
+
+      <!-- Divider -->
+      <div style="width:1px;height:20px;background:var(--border-dark);"></div>
+
+      <!-- Stop -->
+      <button id="btn-stop" class="btn-stop" disabled title="Stop execution">
+        <svg width="8" height="8" viewBox="0 0 9 9" fill="currentColor">
+          <rect x="0.5" y="0.5" width="8" height="8" rx="1.5"/>
+        </svg>
+        Stop
+      </button>
+
+      <!-- Run -->
+      <button id="btn-run" class="btn-run" title="Compile and run (Ctrl+Enter)">
+        <svg width="9" height="10" viewBox="0 0 10 11" fill="currentColor">
+          <polygon points="0.5,0.5 9.5,5.5 0.5,10.5"/>
+        </svg>
+        Run
+      </button>
+
+      <!-- Settings -->
+      <button id="btn-settings" class="btn-icon" title="Settings">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">
+          <circle cx="10" cy="10" r="3"/>
+          <path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════ IDE LAYOUT ══ -->
+  <main id="ide-layout">
+
+    <!-- Editor Pane -->
+    <section id="editor-pane" class="editor-pane">
+      <div class="pane-header">
+        <div class="pane-label">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+            <polyline points="5,3 1,8 5,13"/><polyline points="11,3 15,8 11,13"/>
+          </svg>
+          Editor
+        </div>
+        <div class="pane-meta">
+          <span id="cursor-pos">Ln 1, Col 1</span>
+          <span class="sep">│</span>
+          <span>C++17</span>
+          <span class="sep">│</span>
+          <span>UTF-8</span>
+        </div>
+      </div>
+      <div id="monaco-container"></div>
+    </section>
+
+    <!-- Resizer -->
+    <div id="resizer" class="resizer" title="Drag to resize"></div>
+
+    <!-- Terminal Pane -->
+    <section id="terminal-pane" class="terminal-pane">
+      <div class="pane-header">
+        <div class="pane-label">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+            <rect x="1" y="1" width="14" height="14" rx="2"/>
+            <polyline points="4,6 7,9 4,12"/>
+            <line x1="9" y1="12" x2="13" y2="12"/>
+          </svg>
+          Terminal
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button id="btn-clear-terminal" class="btn-clear-term" title="Clear terminal">
+            <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M3 6h10l-1 8H4L3 6z"/><path d="M1 6h14M6 6V3h4v3"/>
+            </svg>
+            Clear
+          </button>
+          <span style="opacity:0.2;color:var(--warm-silver);">│</span>
+          <span id="exit-code-badge" class="hidden"></span>
+        </div>
+      </div>
+      <div id="terminal-container"></div>
+    </section>
+  </main>
+
+  <!-- ══════════════════════════════════════════════ LOADING OVERLAY ══ -->
+  <div id="loading-overlay">
+    <div class="loader-ring"></div>
+    <p class="loader-title">Initializing Zenith C++</p>
+    <p id="loading-message" class="loader-sub">Loading editor engine…</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ SETTINGS PANEL ══ -->
+  <div id="settings-panel" class="settings-panel hidden">
+
+    <div class="settings-header">
+      <span class="settings-title">Settings</span>
+      <button id="btn-close-settings" class="btn-icon" title="Close settings">
+        <svg width="12" height="12" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="1" y1="1" x2="12" y2="12"/><line x1="12" y1="1" x2="1" y2="12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="settings-body">
+
+      <div class="settings-group">
+        <label class="settings-label">Font Size</label>
+        <div class="settings-row">
+          <input id="setting-font-size" type="range" min="11" max="22" value="14" class="settings-slider" />
+          <span id="font-size-display" class="settings-value">14</span>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <label class="settings-label">Word Wrap</label>
+        <div style="display:flex;gap:8px;">
+          <button id="setting-wrap-on"  class="setting-toggle active" data-value="on">On</button>
+          <button id="setting-wrap-off" class="setting-toggle"        data-value="off">Off</button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <label class="settings-label">Compiler Flags</label>
+        <input id="setting-compiler-flags" type="text" value="-O2 -std=c++17 -Wall"
+          class="settings-input" placeholder="-O2 -std=c++17" />
+      </div>
+
+      <div class="settings-group">
+        <label class="settings-label">Execution Timeout</label>
+        <div class="settings-row">
+          <input id="setting-timeout" type="range" min="3" max="30" value="10" class="settings-slider" />
+          <span id="timeout-display" class="settings-value">10s</span>
+        </div>
+      </div>
+
+      <hr class="settings-divider" />
+
+      <div class="settings-group">
+        <label class="settings-label">About</label>
+        <p class="settings-about-text">
+          Zenith C++ uses <strong>JSCPP</strong> — a JavaScript C++ interpreter — as the primary execution engine,
+          with full <strong>Wasm-Clang</strong> support when available.
+        </p>
+        <div class="settings-about-card">
+          <p class="settings-about-label">COEP / COOP Required</p>
+          <p class="settings-about-text">
+            Run via <code>node server.js</code> locally, or deploy to Netlify / Vercel
+            using the included config files.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Monaco AMD Loader -->
+  <script>
+    window.MonacoEnvironment = {
+      getWorkerUrl: function(moduleId, label) {
+        if (label === 'editorWorkerService') {
+          return 'https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/base/worker/workerMain.js';
+        }
+        return '';
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script>
+
+  <script src="js/terminal.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

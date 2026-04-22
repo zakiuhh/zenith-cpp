@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Zenith C++ — Write, compile, and run C++ entirely in your browser. Zero install. Powered by WebAssembly and Monaco Editor." />
+  <title>Zenith C++ — Browser-Native C++ IDE</title>
+  <link rel="stylesheet" href="css/landing.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════ NAV ══ -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+        <polygon points="11,1 21,19 1,19" fill="none" stroke="#c96442" stroke-width="1.5" stroke-linejoin="round" />
+        <line x1="11" y1="7" x2="11" y2="14" stroke="#c96442" stroke-width="1.5" stroke-linecap="round" />
+        <circle cx="11" cy="16.5" r="1" fill="#c96442" />
+      </svg>
+      <span class="nav-logo-name">Zenith <span>C++</span></span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#developer">Developer</a></li>
+    </ul>
+
+    <a href="compiler.html" class="btn-nav-cta">
+      <svg width="11" height="11" viewBox="0 0 10 11" fill="currentColor">
+        <polygon points="0.5,0.5 9.5,5.5 0.5,10.5" />
+      </svg>
+      Launch IDE
+    </a>
+  </nav>
+
+  <!-- ══════════════════════════ HERO ══ -->
+  <section class="hero">
+
+    <span class="hero-overline fade-up">
+      <svg width="7" height="7" viewBox="0 0 7 7" fill="currentColor">
+        <circle cx="3.5" cy="3.5" r="3.5" />
+      </svg>
+      Browser-Native C++ IDE
+    </span>
+
+    <h1 class="hero-title fade-up delay-1">
+      Write C++.<br />
+      Compile. <em>Run.</em><br />
+      All in the Browser.
+    </h1>
+
+    <p class="hero-sub fade-up delay-2">
+      A full-featured C++ development environment that lives entirely in your browser —
+      no install, no server, no waiting. Powered by WebAssembly and Monaco Editor.
+    </p>
+
+    <div class="hero-actions fade-up delay-3">
+      <a href="compiler.html" class="btn-primary">
+        <svg width="11" height="12" viewBox="0 0 10 11" fill="currentColor">
+          <polygon points="0.5,0.5 9.5,5.5 0.5,10.5" />
+        </svg>
+        Launch IDE
+      </a>
+      <!--<a href="https://github.com" class="btn-secondary" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85.004 1.71.115 2.51.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z" />
+        </svg>
+        View on GitHub
+      </a>-->
+    </div>
+
+    <!-- IDE Mockup -->
+    <div class="hero-mockup fade-up delay-4">
+      <div class="mockup-titlebar">
+        <div class="mockup-dots">
+          <div class="mockup-dot red"></div>
+          <div class="mockup-dot yellow"></div>
+          <div class="mockup-dot green"></div>
+        </div>
+        <span class="mockup-filename">main.cpp — Zenith C++</span>
+        <div style="width:60px;"></div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-code">
+          <div><span class="cm">// Zenith C++ — Browser-Native IDE</span></div>
+          <div><span class="kw">#include</span> <span class="st">&lt;iostream&gt;</span></div>
+          <div><span class="kw">#include</span> <span class="st">&lt;vector&gt;</span></div>
+          <div><span class="kw">#include</span> <span class="st">&lt;algorithm&gt;</span></div>
+          <div>&nbsp;</div>
+          <div><span class="kw">int</span> <span class="fn">main</span><span class="op">() {</span></div>
+          <div>&nbsp;&nbsp;<span class="ty">std</span><span class="op">::</span><span class="ty">vector</span><span
+              class="op">&lt;</span><span class="kw">int</span><span class="op">&gt;</span> nums <span class="op">=
+              {</span><span class="nu">5</span><span class="op">, </span><span class="nu">2</span><span class="op">,
+            </span><span class="nu">8</span><span class="op">, </span><span class="nu">1</span><span class="op">,
+            </span><span class="nu">9</span><span class="op">};</span></div>
+          <div>&nbsp;&nbsp;<span class="ty">std</span><span class="op">::</span><span class="fn">sort</span><span
+              class="op">(nums.</span><span class="fn">begin</span><span class="op">(), nums.</span><span
+              class="fn">end</span><span class="op">());</span></div>
+          <div>&nbsp;&nbsp;<span class="kw">for</span> <span class="op">(</span><span class="kw">auto</span> n <span
+              class="op">: nums)</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ty">std</span><span class="op">::</span><span class="fn">cout</span>
+            <span class="op">&lt;&lt;</span> n <span class="op">&lt;&lt;</span> <span class="st">" "</span><span
+              class="op">;</span>
+          </div>
+          <div>&nbsp;&nbsp;<span class="kw">return</span> <span class="nu">0</span><span class="op">;</span></div>
+          <div><span class="op">}</span><span class="cursor-blink"></span></div>
+        </div>
+        <div class="mockup-divider"></div>
+        <div class="mockup-terminal">
+          <div><span class="ts">$</span> <span class="tc">zenith</span> compile main.cpp</div>
+          <div style="margin-top:6px;"><span class="to">✓ Compiled in 42ms</span></div>
+          <div style="margin-top:12px;color:var(--warm-silver);">1 2 5 8 9</div>
+          <div style="margin-top:8px;"><span class="ts">Exit code:</span> <span class="to">0</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ FEATURES ══ -->
+  <div class="section-raised" id="features">
+    <div class="section section-center">
+      <p class="section-overline">Why Zenith</p>
+      <h2 class="section-title">Everything you need.<br />Nothing you don't.</h2>
+      <p class="section-sub">
+        Built for C++ developers who want a frictionless environment — from first keystroke to compiled output.
+      </p>
+
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+            </svg>
+          </div>
+          <h3 class="feature-card-title">100% Browser-Native</h3>
+          <p class="feature-card-desc">
+            No installs, no sign-ups, no servers. Open the URL and start writing C++ immediately. Works fully offline
+            once loaded.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+          </div>
+          <h3 class="feature-card-title">WebAssembly Powered</h3>
+          <p class="feature-card-desc">
+            JSCPP interprets C++ instantly for rapid iteration. Full Clang/LLVM compiled to Wasm delivers
+            production-grade compilation.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </div>
+          <h3 class="feature-card-title">Monaco Editor</h3>
+          <p class="feature-card-desc">
+            The same editor engine that powers VS Code. Full C++ IntelliSense, syntax highlighting, and keyboard
+            shortcuts baked in.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="3" />
+              <polyline points="7 12 10 15 7 18" />
+              <line x1="13" y1="18" x2="18" y2="18" />
+            </svg>
+          </div>
+          <h3 class="feature-card-title">Live Terminal</h3>
+          <p class="feature-card-desc">
+            Real Xterm.js terminal output with full ANSI color support. See stdout, stderr, and exit codes exactly as
+            you would locally.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h3 class="feature-card-title">Private by Design</h3>
+          <p class="feature-card-desc">
+            Your code never leaves the browser. All compilation and execution happens locally via WebAssembly — zero
+            telemetry.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14" />
+            </svg>
+          </div>
+          <h3 class="feature-card-title">Configurable</h3>
+          <p class="feature-card-desc">
+            Custom compiler flags, font size, word wrap, and execution timeout — all adjustable from the built-in
+            settings panel.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ HOW IT WORKS ══ -->
+  <div id="how-it-works">
+    <div class="section section-center">
+      <p class="section-overline">Workflow</p>
+      <h2 class="section-title">From idea to output<br />in three steps.</h2>
+      <p class="section-sub">
+        Zenith strips away every friction point between writing and running your code.
+      </p>
+
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Write</h3>
+          <p class="step-desc">
+            Open the Monaco editor with C++ syntax highlighting, autocomplete, and error squiggles — ready instantly.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Compile</h3>
+          <p class="step-desc">
+            Hit <strong style="color:var(--warm-silver);font-weight:500;">Run</strong> or press <strong
+              style="color:var(--warm-silver);font-weight:500;">Ctrl+Enter</strong>. JSCPP compiles in milliseconds;
+            Wasm-Clang handles the rest.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Run</h3>
+          <p class="step-desc">
+            Instant output in the live terminal. See stdout, stderr, exit codes, and execution time — all in real time.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-hr" />
+
+  <!-- ══════════════════════════ TECH STACK ══ -->
+  <div class="section section-center" style="padding-top:70px;padding-bottom:70px;">
+    <p class="section-overline">Tech Stack</p>
+    <h2 class="section-title" style="margin-bottom:36px;">Built on proven foundations.</h2>
+
+    <div class="tech-pills">
+      <div class="tech-pill"><span class="tech-pill-dot"></span>JSCPP Interpreter</div>
+      <div class="tech-pill"><span class="tech-pill-dot"></span>Clang / LLVM → Wasm</div>
+      <div class="tech-pill"><span class="tech-pill-dot"></span>Monaco Editor v0.47</div>
+      <div class="tech-pill"><span class="tech-pill-dot"></span>Xterm.js v5</div>
+      <div class="tech-pill"><span class="tech-pill-dot"></span>Web Workers</div>
+      <div class="tech-pill"><span class="tech-pill-dot"></span>SharedArrayBuffer</div>
+      <div class="tech-pill"><span class="tech-pill-dot"></span>COEP / COOP Headers</div>
+      <div class="tech-pill"><span class="tech-pill-dot"></span>C++17 Standard</div>
+    </div>
+  </div>
+
+  <hr class="section-hr" />
+
+  <!-- ══════════════════════════ DEVELOPER ══ -->
+  <div class="section-raised" id="developer">
+    <div class="section section-center">
+      <p class="section-overline">The Creator</p>
+      <h2 class="section-title" style="margin-bottom:48px;">Built with care.</h2>
+
+      <div class="dev-card">
+        <!--<div class="dev-avatar">ZUH</div> -->
+        <h3 class="dev-name"><a href="https://github.com/zakiuhh" target="_blank">Zaki Ul Hassan</a></h3>
+        <p class="dev-role">Vanilla Web Developer</p>
+        <p class="dev-bio">
+          Passionate about developer tooling, AI, and bringing native-quality
+          development experiences to the web. Zenith C++ is a project born from the idea
+          that great tools should be frictionless.
+        </p>
+        <div class="dev-tags">
+          <span class="dev-tag">HTML5</span>
+          <span class="dev-tag">CSS3</span>
+          <span class="dev-tag">Vanilla JS</span>
+          <span class="dev-tag">C++</span>
+          <span class="dev-tag">Python</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ FINAL CTA ══ -->
+  <div class="cta-section">
+    <p class="cta-label">Get started now</p>
+    <h2 class="cta-title">Start coding C++<br />in seconds.</h2>
+    <p class="cta-sub">
+      No account. No install. Just open Zenith C++ and start building.
+    </p>
+    <a href="compiler.html" class="btn-launch">
+      <svg width="13" height="14" viewBox="0 0 10 11" fill="currentColor">
+        <polygon points="0.5,0.5 9.5,5.5 0.5,10.5" />
+      </svg>
+      Open Zenith C++
+    </a>
+  </div>
+
+  <!-- ══════════════════════════ FOOTER ══ -->
+  <footer class="footer">
+    <a href="#" class="footer-logo">
+      <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
+        <polygon points="11,1 21,19 1,19" fill="none" stroke="#c96442" stroke-width="1.5" stroke-linejoin="round" />
+        <line x1="11" y1="7" x2="11" y2="14" stroke="#c96442" stroke-width="1.5" stroke-linecap="round" />
+        <circle cx="11" cy="16.5" r="1" fill="#c96442" />
+      </svg>
+      <span class="footer-logo-name">Zenith <span>C++</span></span>
+    </a>
+
+    <p class="footer-copy">© 2026 Zenith C++ · Built by Zaki</p>
+
+    <ul class="footer-links">
+      <li><a href="compiler.html">Launch IDE</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#developer">Developer</a></li>
+    </ul>
+  </footer>
+
+</body>
+
+</html>

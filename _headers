@@ -1,0 +1,10 @@
+# Netlify _headers file
+# Injects Cross-Origin Isolation headers required for SharedArrayBuffer + Wasm-Clang
+
+/*
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
