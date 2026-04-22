@@ -738,4 +738,28 @@ body {
   .settings-panel {
     width: 100%;
   }
+  #app-header {
+    padding: 0 12px;
+  }
+  .logo-sub {
+    display: none;
+  }
+  .file-tab-container {
+    display: none !important;
+  }
+  #status-text {
+    display: none;
+  }
+  #status-indicator {
+    padding: 5px;
+  }
+  .btn-run .btn-text, .btn-stop .btn-text {
+    display: none;
+  }
+  .btn-run, .btn-stop {
+    padding: 8px 10px;
+  }
+  .btn-run::after {
+    display: none;
+  }
 }

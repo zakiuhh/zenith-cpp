@@ -949,6 +949,17 @@ a {
     padding: 100px 20px 60px;
   }
 
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
   .section {
     padding: 70px 20px;
   }
@@ -976,11 +987,30 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .mockup-code, .mockup-terminal {
+    overflow-x: auto;
+    padding: 16px;
+    font-size: 11.5px;
+  }
+
   .mockup-divider {
     display: none;
   }
 
   .mockup-terminal {
     border-top: 1px solid var(--border-dark);
+  }
+
+  .dev-card {
+    padding: 30px 20px;
+  }
+
+  .cta-section {
+    padding: 80px 20px;
+  }
+
+  .btn-launch {
+    width: 100%;
+    justify-content: center;
   }
 }
