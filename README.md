@@ -24,7 +24,7 @@ Zenith C++ is a fully client-side C++ compiler and execution environment that ru
 
 <h4 align="center"> Desktop View </h4>
 <p align="center">
-  <img width="75%" alt="Zenith C++ Desktop View 1" src="https://github.com/user-attachments/assets/ab57efff-8290-44b8-816f-b8e586e609c2" />
+  <img width="75%" alt="Zenith C++ Desktop View 1" src="https://github.com/user-attachments/assets/4c24cd47-a95f-4018-b79f-44e2fbb95ddb" />
 </p>
 <p align="center">
   <img width="75%" alt="Zenith C++ Desktop View 2" src="https://github.com/user-attachments/assets/bab09f92-7aa8-4a9e-ba87-9b9695e56f7a" />
@@ -65,7 +65,6 @@ Zenith C++ is a fully client-side C++ compiler and execution environment that ru
 | Persistence | IndexedDB |
 | Runtime | Emscripten MEMFS (Virtual FS) |
 | Deployment | Vercel |
-
 ---
 
 ## Project Structure
