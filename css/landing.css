@@ -33,6 +33,67 @@
   --ring-terr: 0 0 0 1px #c96442;
 }
 
+/* ── Light Theme Overrides ── */
+body.theme-light {
+  --near-black:   #f5f4f0;
+  --dark-surface: #dddbd4;
+  --dark-panel:   #ebe9e3;
+  --dark-raised:  #e2e0d8;
+  --dark-hover:   #d8d6ce;
+  --ivory:        #1a1916;
+  --warm-silver:  #4a4844;
+  --stone:        #6b6963;
+  --olive-gray:   #8a8880;
+  --charcoal-warm:#9e9c94;
+  --border-dark:  #c8c5bc;
+  --border-muted: rgba(0,0,0,0.07);
+  --whisper:      rgba(0,0,0,0.12) 0px 8px 40px;
+  --ring-dark:    0 0 0 1px #c8c5bc;
+}
+
+body.theme-light { background: #f5f4f0; color: #1a1916; }
+body.theme-light .nav { background: rgba(235,233,227,0.92); border-bottom-color: #c8c5bc; }
+body.theme-light .section-raised { background: #ebe9e3; border-color: #c8c5bc; }
+body.theme-light .section-dark   { background: #f0ede6; border-color: #c8c5bc; }
+body.theme-light .feature-card   { background: #ebe9e3; border-color: #c8c5bc; }
+body.theme-light .tech-pill      { background: #ebe9e3; border-color: #c8c5bc; color: #4a4844; }
+body.theme-light .dev-card       { background: #ebe9e3; border-color: #c8c5bc; }
+body.theme-light .step-number    { background: #ebe9e3; border-color: #c8c5bc; }
+body.theme-light .mockup-titlebar{ background: rgba(235,233,227,0.9); }
+body.theme-light .mockup-code    { background: #ebe9e3; }
+body.theme-light .hero-mockup    { background: #ebe9e3; border-color: #c8c5bc; }
+body.theme-light .footer         { border-top-color: #c8c5bc; }
+body.theme-light .section-hr     { border-top-color: #c8c5bc; }
+body.theme-light .cta-section    { background: transparent; }
+body.theme-light .btn-secondary  { background: #ebe9e3; border-color: #c8c5bc; color: #4a4844; }
+body.theme-light .btn-secondary:hover { background: #e2e0d8; color: #1a1916; }
+
+/* ── Theme toggle button (landing page) ── */
+.btn-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--border-dark);
+  background: transparent;
+  color: var(--stone);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--border-dark);
+  transition: color 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+.btn-theme:hover {
+  color: var(--ivory);
+  background: var(--dark-raised);
+  border-color: rgba(201,100,66,0.35);
+  box-shadow: 0 0 0 1px rgba(201,100,66,0.25);
+}
+
 /* ── Reset ── */
 *,
 *::before,

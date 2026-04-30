@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "start": "node server.js",
+    "dev": "start http://localhost:3000/compiler.html && node server.js"
+  },
   "dependencies": {
     "JSCPP": "^2.0.9"
   }

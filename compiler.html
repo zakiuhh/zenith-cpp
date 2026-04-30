@@ -75,6 +75,25 @@
         <span class="btn-text">Run</span>
       </button>
 
+      <!-- Theme toggle -->
+      <button id="btn-theme" class="btn-theme" title="Switch theme" aria-label="Switch theme">
+        <span class="theme-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="12" y1="2"  x2="12" y2="5"/>
+            <line x1="12" y1="19" x2="12" y2="22"/>
+            <line x1="2"  y1="12" x2="5"  y2="12"/>
+            <line x1="19" y1="12" x2="22" y2="12"/>
+            <line x1="4.22"  y1="4.22"  x2="6.34"  y2="6.34"/>
+            <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+            <line x1="4.22"  y1="19.78" x2="6.34"  y2="17.66"/>
+            <line x1="17.66" y1="6.34"  x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
+        <span class="theme-label">Light</span>
+      </button>
+
       <!-- Settings -->
       <button id="btn-settings" class="btn-icon" title="Settings">
         <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">
@@ -105,6 +124,25 @@
           <span>UTF-8</span>
         </div>
       </div>
+
+      <!-- Mobile Clipboard Toolbar — hidden on desktop via CSS -->
+      <div id="mobile-clipboard-bar">
+        <button id="btn-mobile-paste" class="btn-mobile-clip btn-mobile-paste" title="Paste code from clipboard">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="9" height="12" rx="1.5"/>
+            <path d="M5 4H3a1 1 0 00-1 1v9a1 1 0 001 1h7a1 1 0 001-1v-2"/>
+          </svg>
+          Paste Code
+        </button>
+        <button id="btn-mobile-copy" class="btn-mobile-clip btn-mobile-copy" title="Copy all code to clipboard">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="9" height="12" rx="1.5"/>
+            <path d="M11 4h2a1 1 0 011 1v9a1 1 0 01-1 1H6a1 1 0 01-1-1v-2"/>
+          </svg>
+          Copy Code
+        </button>
+      </div>
+
       <div id="monaco-container"></div>
     </section>
 
@@ -145,7 +183,7 @@
   </div>
 
   <!-- ══════════════════════════════════════════════ SETTINGS PANEL ══ -->
-  <div id="settings-panel" class="settings-panel hidden">
+  <div id="settings-panel" class="settings-panel">
 
     <div class="settings-header">
       <span class="settings-title">Settings</span>
@@ -224,6 +262,7 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script>
 
+  <script src="js/theme.js"></script>
   <script src="js/terminal.js"></script>
   <script src="js/editor.js"></script>
   <script src="js/main.js"></script>

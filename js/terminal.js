@@ -15,6 +15,8 @@ class ZenithTerminal {
     const container = document.getElementById('terminal-container');
     if (!container) return;
 
+    const isLight = document.body.classList.contains('theme-light');
+
     this.term = new Terminal({
       fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
       fontSize: 13,
@@ -25,30 +27,7 @@ class ZenithTerminal {
       cursorWidth: 2,
       allowTransparency: true,
       scrollback: 10000,
-      theme: {
-        background:       '#141413',   // near-black
-        foreground:       '#b0aea5',   // warm silver
-        cursor:           '#c96442',   // terracotta
-        cursorAccent:     '#141413',
-        selectionBackground: 'rgba(201,100,66,0.18)',
-        // ANSI — warm, no neon
-        black:            '#1c1b19',
-        red:              '#b53333',   // crimson
-        green:            '#5a9e6f',   // muted sage
-        yellow:           '#d4a017',   // warm gold
-        blue:             '#3898ec',   // focus blue
-        magenta:          '#c96442',   // terracotta
-        cyan:             '#8fa8c8',   // dusty blue
-        white:            '#b0aea5',   // warm silver
-        brightBlack:      '#3d3d3a',
-        brightRed:        '#c96442',
-        brightGreen:      '#7aab8a',
-        brightYellow:     '#e8b84b',
-        brightBlue:       '#60a5fa',
-        brightMagenta:    '#d97757',   // coral
-        brightCyan:       '#a8bfd4',
-        brightWhite:      '#faf9f5',   // ivory
-      }
+      theme: isLight ? this._lightTheme() : this._darkTheme(),
     });
 
     // Addons
@@ -70,6 +49,67 @@ class ZenithTerminal {
     ro.observe(container);
 
     this._printBanner();
+  }
+
+  /** Dark terminal palette */
+  _darkTheme() {
+    return {
+      background:          '#141413',
+      foreground:          '#b0aea5',
+      cursor:              '#c96442',
+      cursorAccent:        '#141413',
+      selectionBackground: 'rgba(201,100,66,0.18)',
+      black:               '#1c1b19',
+      red:                 '#b53333',
+      green:               '#5a9e6f',
+      yellow:              '#d4a017',
+      blue:                '#3898ec',
+      magenta:             '#c96442',
+      cyan:                '#8fa8c8',
+      white:               '#b0aea5',
+      brightBlack:         '#3d3d3a',
+      brightRed:           '#c96442',
+      brightGreen:         '#7aab8a',
+      brightYellow:        '#e8b84b',
+      brightBlue:          '#60a5fa',
+      brightMagenta:       '#d97757',
+      brightCyan:          '#a8bfd4',
+      brightWhite:         '#faf9f5',
+    };
+  }
+
+  /** Light terminal palette */
+  _lightTheme() {
+    return {
+      background:          '#f5f4f0',
+      foreground:          '#2a2825',
+      cursor:              '#c96442',
+      cursorAccent:        '#f5f4f0',
+      selectionBackground: 'rgba(201,100,66,0.20)',
+      black:               '#1a1916',
+      red:                 '#a82020',
+      green:               '#2e6b42',
+      yellow:              '#7a5200',
+      blue:                '#1a5fa8',
+      magenta:             '#c96442',
+      cyan:                '#2a5a80',
+      white:               '#4a4844',
+      brightBlack:         '#6b6963',
+      brightRed:           '#c96442',
+      brightGreen:         '#3d7a52',
+      brightYellow:        '#9a6e00',
+      brightBlue:          '#3a6da0',
+      brightMagenta:       '#b54830',
+      brightCyan:          '#3a6d90',
+      brightWhite:         '#1a1916',
+    };
+  }
+
+  /** Sync xterm theme + stdout color to match current UI theme */
+  syncTheme() {
+    if (!this.term) return;
+    const isLight = document.body.classList.contains('theme-light');
+    this.term.options.theme = isLight ? this._lightTheme() : this._darkTheme();
   }
 
   /** Print the startup banner */
@@ -97,16 +137,18 @@ class ZenithTerminal {
     if (this.term) this.term.writeln(text);
   }
 
-  /** Write stdout (parchment color) */
+  /** Write stdout — color adapts to current UI theme */
   writeStdout(text) {
     if (!this.term) return;
-    // ivory (#faf9f5)
+    // Dark mode: ivory #faf9f5 | Light mode: near-black #1a1916
+    const isLight = document.body.classList.contains('theme-light');
+    const fg = isLight ? '\x1b[38;2;26;25;22m' : '\x1b[38;2;250;249;245m';
     const lines = text.replace(/\r\n/g, '\n').split('\n');
     lines.forEach((line, i) => {
       if (i < lines.length - 1) {
-        this.term.writeln(`\x1b[38;2;250;249;245m${line}\x1b[0m`);
+        this.term.writeln(`${fg}${line}\x1b[0m`);
       } else if (line) {
-        this.term.write(`\x1b[38;2;250;249;245m${line}\x1b[0m`);
+        this.term.write(`${fg}${line}\x1b[0m`);
       }
     });
   }

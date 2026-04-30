@@ -3,12 +3,34 @@
  * Loads Monaco via AMD, applies custom dark theme, configures C++ language.
  */
 
+const LS_CODE_KEY = 'zenith-cpp-code-v2';
+
 const DEFAULT_CODE = `#include <iostream>
-using namesapce std;
-int main(){
-    cout<<"Welcome to Zenith C++";
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    cout << "Welcome to Zenith C++ — Browser-Native IDE" << endl;
+    cout << "Press Run or Ctrl+Enter to compile and run." << endl;
     return 0;
 }`;
+
+/** Load saved code from localStorage, falling back to DEFAULT_CODE */
+function loadSavedCode() {
+  try {
+    const saved = localStorage.getItem(LS_CODE_KEY);
+    return saved && saved.trim().length > 0 ? saved : DEFAULT_CODE;
+  } catch {
+    return DEFAULT_CODE;
+  }
+}
+
+/** Save current code to localStorage */
+function saveCodeToStorage(code) {
+  try {
+    localStorage.setItem(LS_CODE_KEY, code);
+  } catch { /* quota exceeded or private mode — silently ignore */ }
+}
 
 class ZenithEditor {
   constructor() {
@@ -39,8 +61,9 @@ class ZenithEditor {
     });
   }
 
-  /** Register the Zenith dark theme */
+  /** Register both Zenith themes (dark + light) */
   _registerTheme(monaco) {
+    // ── Dark theme ──────────────────────────────────────────────
     monaco.editor.defineTheme('zenith-dark', {
       base: 'vs-dark',
       inherit: true,
@@ -109,6 +132,80 @@ class ZenithEditor {
         'selection.background':          '#c9644222',
       }
     });
+
+    // ── Light theme ─────────────────────────────────────────────
+    monaco.editor.defineTheme('zenith-light', {
+      base: 'vs',
+      inherit: true,
+      rules: [
+        { token: '',                  foreground: '2a2825', background: 'ebe9e3' },
+        { token: 'comment',           foreground: '9e9c94', fontStyle: 'italic' },
+        { token: 'keyword',           foreground: 'b54830', fontStyle: '' },
+        { token: 'keyword.control',   foreground: 'c96442' },
+        { token: 'string',            foreground: '3d7a52' },
+        { token: 'string.escape',     foreground: '2e6040' },
+        { token: 'number',            foreground: '9a6e00' },
+        { token: 'number.float',      foreground: '9a6e00' },
+        { token: 'type',              foreground: '3a6da0' },
+        { token: 'type.identifier',   foreground: '3a6da0' },
+        { token: 'delimiter',         foreground: '9e9c94' },
+        { token: 'delimiter.bracket', foreground: '6b6963' },
+        { token: 'operator',          foreground: 'c96442' },
+        { token: 'identifier',        foreground: '2a2825' },
+        { token: 'function',          foreground: 'b54830' },
+        { token: 'variable',          foreground: '1a1916' },
+        { token: 'macro',             foreground: '8a5c1a', fontStyle: 'bold' },
+        { token: 'preprocessor',      foreground: '8a5c1a' },
+        { token: 'namespace',         foreground: '3a6da0' },
+        { token: 'annotation',        foreground: 'c96442' },
+      ],
+      colors: {
+        'editor.background':             '#ebe9e3',
+        'editor.foreground':             '#2a2825',
+        'editor.lineHighlightBackground':'#e2e0d8',
+        'editor.lineHighlightBorder':    '#e2e0d800',
+        'editor.selectionBackground':    '#c9644228',
+        'editor.selectionHighlightBackground': '#c9644215',
+        'editor.findMatchBackground':    '#c9644335',
+        'editor.findMatchHighlightBackground': '#c9644318',
+        'editorCursor.foreground':       '#c96442',
+        'editorCursor.background':       '#ebe9e3',
+        'editorLineNumber.foreground':   '#c8c5bc',
+        'editorLineNumber.activeForeground': '#6b6963',
+        'editorIndentGuide.background':  '#dddbd4',
+        'editorIndentGuide.activeBackground': '#c8c5bc',
+        'editorWhitespace.foreground':   '#dddbd4',
+        'editorBracketMatch.background': '#c9644220',
+        'editorBracketMatch.border':     '#c9644260',
+        'editorGutter.background':       '#ebe9e3',
+        'editorSuggestWidget.background':'#f5f4f0',
+        'editorSuggestWidget.border':    '#c8c5bc',
+        'editorSuggestWidget.foreground':'#2a2825',
+        'editorSuggestWidget.selectedBackground': '#c9644218',
+        'editorSuggestWidget.highlightForeground': '#c96442',
+        'editorHoverWidget.background':  '#f5f4f0',
+        'editorHoverWidget.border':      '#c8c5bc',
+        'input.background':              '#f5f4f0',
+        'input.border':                  '#c8c5bc',
+        'input.foreground':              '#1a1916',
+        'scrollbar.shadow':              '#00000000',
+        'scrollbarSlider.background':    '#c8c5bc66',
+        'scrollbarSlider.hoverBackground':'#b0aea588',
+        'scrollbarSlider.activeBackground':'#9e9c94aa',
+        'minimap.background':            '#ebe9e3',
+        'minimapSlider.background':      '#c9644215',
+        'minimapSlider.hoverBackground': '#c9644225',
+        'focusBorder':                   '#3898ec55',
+        'selection.background':          '#c9644222',
+      }
+    });
+  }
+
+  /** Sync Monaco theme to match the current body class */
+  syncTheme() {
+    if (!this.editor) return;
+    const isLight = document.body.classList.contains('theme-light');
+    this.monaco.editor.setTheme(isLight ? 'zenith-light' : 'zenith-dark');
   }
 
   /** Register C++ specific completions (basic snippets) */
@@ -207,10 +304,13 @@ class ZenithEditor {
   _createEditor(monaco) {
     const container = document.getElementById('monaco-container');
 
+    const initialTheme = document.body.classList.contains('theme-light')
+      ? 'zenith-light' : 'zenith-dark';
+
     this.editor = monaco.editor.create(container, {
-      value: DEFAULT_CODE,
+      value: loadSavedCode(),
       language: 'cpp',
-      theme: 'zenith-dark',
+      theme: initialTheme,
       fontSize: 14,
       fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
       fontLigatures: true,
@@ -248,10 +348,16 @@ class ZenithEditor {
       if (el) el.textContent = `Ln ${pos.lineNumber}, Col ${pos.column}`;
     });
 
-    // Mark file as modified
+    // Mark file as modified + auto-save to localStorage
+    let _saveTimer = null;
     this.editor.onDidChangeModelContent(() => {
       const dot = document.querySelector('.dot-unsaved');
       if (dot) dot.classList.remove('hidden');
+      // Debounced save — persist 800ms after last keystroke
+      clearTimeout(_saveTimer);
+      _saveTimer = setTimeout(() => {
+        saveCodeToStorage(this.editor.getValue());
+      }, 800);
     });
 
     this._onReady.forEach(fn => fn(this.editor, monaco));

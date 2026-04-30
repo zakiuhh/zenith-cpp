@@ -33,6 +33,10 @@ const loadingOverlay = document.getElementById('loading-overlay');
 const loadingMsg  = document.getElementById('loading-message');
 const settingsPanel = document.getElementById('settings-panel');
 
+// Mobile clipboard buttons
+const btnMobilePaste = document.getElementById('btn-mobile-paste');
+const btnMobileCopy  = document.getElementById('btn-mobile-copy');
+
 // Settings controls
 const fontSizeSlider  = document.getElementById('setting-font-size');
 const fontSizeDisplay = document.getElementById('font-size-display');
@@ -375,7 +379,6 @@ function updateExitBadge(code) {
 // ──────────────────────────────────────────────────────────────
 function openSettings() {
   settingsPanel.classList.add('open');
-  settingsPanel.classList.remove('hidden');
 }
 
 function closeSettings() {
@@ -452,7 +455,8 @@ function bindUI() {
   });
 
   // Settings open/close
-  btnSettings.addEventListener('click', () => {
+  btnSettings.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent bubble to document "click outside" handler
     if (settingsPanel.classList.contains('open')) {
       closeSettings();
     } else {
@@ -465,7 +469,7 @@ function bindUI() {
   document.addEventListener('click', (e) => {
     if (settingsPanel.classList.contains('open') &&
         !settingsPanel.contains(e.target) &&
-        e.target !== btnSettings) {
+        !btnSettings.contains(e.target)) {
       closeSettings();
     }
   });
@@ -499,15 +503,60 @@ function bindUI() {
     execTimeout = secs * 1000;
   });
 
-  // When compiler reaches 'running' state after progress updates
-  worker && worker.addEventListener && worker.addEventListener('message', (e) => {
-    if (e.data.type === 'stdout' || e.data.type === 'stderr') {
-      if (isRunning) setStatus('running');
-    }
-  });
+  // ── Mobile clipboard ──────────────────────────────────────────
+  if (btnMobilePaste) {
+    btnMobilePaste.addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (!text || !text.trim()) {
+          showToast('Clipboard is empty');
+          return;
+        }
+        zenithEditor.setCode(text);
+        showToast('Code pasted ✓');
+        // Trigger unsaved dot
+        const dot = document.querySelector('.dot-unsaved');
+        if (dot) dot.classList.remove('hidden');
+      } catch (err) {
+        // Clipboard permission denied or not supported
+        showToast('Cannot read clipboard — allow permission in browser settings');
+      }
+    });
+  }
+
+  if (btnMobileCopy) {
+    btnMobileCopy.addEventListener('click', async () => {
+      try {
+        const code = zenithEditor.getCode();
+        if (!code || !code.trim()) {
+          showToast('Nothing to copy');
+          return;
+        }
+        await navigator.clipboard.writeText(code);
+        showToast('Code copied ✓');
+      } catch (err) {
+        // Fallback: select all and let user copy manually
+        showToast('Auto-copy failed — select all and copy manually');
+      }
+    });
+  }
+
+}
+
+// Extra running-state transition (stdout/stderr means actively running)
+function onWorkerRuntimeMessage(e) {
+  if (e.data.type === 'stdout' || e.data.type === 'stderr') {
+    if (isRunning) setStatus('running');
+  }
 }
 
 // ──────────────────────────────────────────────────────────────
 // Kick it off
 // ──────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', init);
+// Guard against DOMContentLoaded already having fired (Monaco CDN loader
+// is synchronous and may delay script execution past the event).
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

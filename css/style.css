@@ -57,6 +57,46 @@
   --font-serif:    'Georgia', 'Times New Roman', serif;
 }
 
+/* ── Light Theme Overrides ── */
+body.theme-light {
+  --near-black:    #f5f4f0;
+  --dark-surface:  #dddbd4;
+  --dark-panel:    #ebe9e3;
+  --dark-raised:   #e2e0d8;
+  --dark-hover:    #d8d6ce;
+
+  --ivory:         #1a1916;
+  --warm-silver:   #4a4844;
+  --stone:         #6b6963;
+  --olive-gray:    #8a8880;
+  --charcoal-warm: #9e9c94;
+  --dark-warm:     #b0aea5;
+
+  --border-dark:   #c8c5bc;
+  --border-dim:    rgba(0,0,0,0.05);
+  --border-muted:  rgba(0,0,0,0.08);
+
+  --ring-dark:     0 0 0 1px #c8c5bc;
+  --ring-muted:    0 0 0 1px rgba(0,0,0,0.07);
+  --whisper:       rgba(0,0,0,0.12) 0px 4px 24px;
+  --whisper-sm:    rgba(0,0,0,0.08) 0px 2px 12px;
+}
+
+body.theme-light #app-header {
+  background: #ebe9e3;
+  border-bottom-color: #c8c5bc;
+}
+body.theme-light .editor-pane  { background: #ebe9e3; }
+body.theme-light .terminal-pane { background: #f5f4f0; border-left-color: #c8c5bc; }
+body.theme-light .pane-header  { background: rgba(235,233,227,0.95); border-bottom-color: #c8c5bc; }
+body.theme-light .settings-panel { background: #ebe9e3; border-left-color: #c8c5bc; }
+body.theme-light .settings-input { background: #f5f4f0; border-color: #c8c5bc; color: #1a1916; }
+body.theme-light .settings-about-card { background: #f5f4f0; border-color: #c8c5bc; }
+body.theme-light #loading-overlay { background: #f5f4f0; }
+body.theme-light .toast { background: #e2e0d8; border-color: #c8c5bc; color: #4a4844; }
+body.theme-light .file-tab.active-tab { background: rgba(201,100,66,0.09); }
+body.theme-light #terminal-container .xterm-viewport { background-color: #f5f4f0 !important; }
+
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; }
@@ -260,7 +300,7 @@ body {
   box-shadow: 0 0 0 1px var(--border-dark);
 }
 
-/* ── Icon button (settings) ── */
+/* ── Icon button (settings, theme) ── */
 .btn-icon {
   width: 32px; height: 32px;
   display: inline-flex;
@@ -277,6 +317,32 @@ body {
   color: var(--ivory);
   background: var(--dark-raised);
   box-shadow: 0 0 0 1px var(--border-dark);
+}
+
+/* ── Theme toggle button ── */
+.btn-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-dark);
+  background: transparent;
+  color: var(--stone);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--border-dark);
+  transition: color 0.15s, background 0.15s, box-shadow 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.btn-theme:hover {
+  color: var(--ivory);
+  background: var(--dark-raised);
+  box-shadow: 0 0 0 1px rgba(201,100,66,0.3);
+  border-color: rgba(201,100,66,0.3);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -505,13 +571,18 @@ body {
   display: flex;
   flex-direction: column;
   z-index: 40;
+  /* Always rendered, slid off-screen by default */
   transform: translateX(100%);
+  visibility: hidden;
   box-shadow: -16px 0 48px rgba(0,0,0,0.55);
-  transition: transform 0.28s cubic-bezier(0.16,1,0.3,1);
+  transition: transform 0.28s cubic-bezier(0.16,1,0.3,1),
+              visibility 0s linear 0.28s;
 }
 .settings-panel.open {
   transform: translateX(0);
-  display: flex !important;
+  visibility: visible;
+  transition: transform 0.28s cubic-bezier(0.16,1,0.3,1),
+              visibility 0s linear 0s;
 }
 
 .settings-header {
@@ -721,6 +792,15 @@ body {
 /* ════════════════════════════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════
+   MOBILE CLIPBOARD TOOLBAR
+   Shown only on touch devices — lets users paste from phone
+   clipboard and copy their code out.
+════════════════════════════════════════════════════════════════ */
+#mobile-clipboard-bar {
+  display: none; /* hidden on desktop */
+}
+
 @media (max-width: 768px) {
   #ide-layout {
     grid-template-columns: 1fr;
@@ -762,4 +842,80 @@ body {
   .btn-run::after {
     display: none;
   }
+
+  /* ── Mobile clipboard bar ── */
+  #mobile-clipboard-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(20,20,19,0.96);
+    border-bottom: 1px solid var(--border-dark);
+    flex-shrink: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .btn-mobile-clip {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--border-dark);
+    background: var(--dark-raised);
+    color: var(--warm-silver);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px var(--border-dark);
+    transition: all 0.18s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-mobile-clip:active {
+    transform: scale(0.97);
+    opacity: 0.85;
+  }
+  .btn-mobile-paste {
+    color: var(--coral);
+    border-color: rgba(201,100,66,0.30);
+    background: rgba(201,100,66,0.07);
+    box-shadow: 0 0 0 1px rgba(201,100,66,0.18);
+  }
+  .btn-mobile-paste:active {
+    background: rgba(201,100,66,0.14);
+  }
+  .btn-mobile-copy:hover,
+  .btn-mobile-copy:active {
+    color: var(--ivory);
+    background: var(--dark-surface);
+    box-shadow: 0 0 0 1px var(--dark-warm);
+  }
+
+  /* toast nudge so it clears the mobile bar */
+  .toast {
+    bottom: 16px;
+  }
 }
+
+/* Light theme overrides for mobile bar */
+body.theme-light #mobile-clipboard-bar {
+  background: rgba(235,233,227,0.97);
+  border-bottom-color: #c8c5bc;
+}
+body.theme-light .btn-mobile-clip {
+  background: #f5f4f0;
+  border-color: #c8c5bc;
+  color: #4a4844;
+  box-shadow: 0 0 0 1px #c8c5bc;
+}
+body.theme-light .btn-mobile-paste {
+  color: #b54830;
+  border-color: rgba(201,100,66,0.35);
+  background: rgba(201,100,66,0.06);
+}
