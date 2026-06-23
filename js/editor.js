@@ -402,6 +402,89 @@ class ZenithEditor {
   layout() {
     if (this.editor) this.editor.layout();
   }
+
+  /**
+   * Insert code at the current cursor position (undo-safe via executeEdits).
+   * @param {string} code — text to insert
+   */
+  insertAtCursor(code) {
+    if (!this.editor) return;
+    const selection = this.editor.getSelection();
+    this.editor.executeEdits('functions-panel', [{
+      identifier: { major: 1, minor: 1 },
+      range: selection,
+      text: code,
+      forceMoveMarkers: true
+    }]);
+    this.editor.focus();
+    // Mark unsaved dot
+    const dot = document.querySelector('.dot-unsaved');
+    if (dot) dot.classList.remove('hidden');
+  }
+
+  /**
+   * Return an array of included header names from the current code.
+   * e.g. ["iostream", "vector", "cmath"]
+   * @returns {string[]}
+   */
+  getIncludes() {
+    if (!this.editor) return [];
+    const code = this.editor.getValue();
+    const matches = [...code.matchAll(/#include\s*[<"]([^>"]+)[>"]/g)];
+    return matches.map(m => m[1].trim());
+  }
+
+  /**
+   * Add a #include <header> line after the last existing #include,
+   * or at the very top of the file if none exist. No-op if already present.
+   * @param {string} header — header name without angle brackets, e.g. "vector"
+   */
+  addInclude(header) {
+    if (!this.editor) return;
+    const model = this.editor.getModel();
+    if (!model) return;
+
+    const code = model.getValue();
+    // Check if already included (handles both <> and "")
+    const alreadyIncluded = new RegExp(
+      '#include\\s*[<"]' + header.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[>"]'
+    ).test(code);
+    if (alreadyIncluded) return;
+
+    const headerLine = `#include <${header}>`;
+    const lines = code.split('\n');
+
+    // Find last #include line (0-indexed)
+    let lastInclude0 = -1;
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].trimStart().startsWith('#include')) lastInclude0 = i;
+    }
+
+    if (lastInclude0 === -1) {
+      // No existing includes — insert at line 1
+      this.editor.executeEdits('add-include', [{
+        identifier: { major: 1, minor: 1 },
+        range: { startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 },
+        text: headerLine + '\n',
+        forceMoveMarkers: true
+      }]);
+    } else {
+      // Insert after last include: append to end of that line
+      const monacoLine = lastInclude0 + 1; // Monaco is 1-indexed
+      const lineLen = model.getLineContent(monacoLine).length;
+      this.editor.executeEdits('add-include', [{
+        identifier: { major: 1, minor: 1 },
+        range: {
+          startLineNumber: monacoLine,
+          startColumn: lineLen + 1,
+          endLineNumber: monacoLine,
+          endColumn: lineLen + 1
+        },
+        text: '\n' + headerLine,
+        forceMoveMarkers: true
+      }]);
+    }
+  }
 }
 
 // Export singleton

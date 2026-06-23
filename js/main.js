@@ -14,11 +14,10 @@
 let worker         = null;
 let workerReady    = false;
 let isRunning      = false;
-let collectingInput = false;  // true while waiting for stdin
 let runStartTime   = null;
 let timeoutHandle  = null;
 let compilerFlags  = '-O2 -std=c++17 -Wall';
-let execTimeout    = 10000; // ms
+let execTimeout    = 30000; // ms
 
 // ── DOM refs ───────────────────────────────────────────────────
 const btnRun      = document.getElementById('btn-run');
@@ -26,6 +25,11 @@ const btnStop     = document.getElementById('btn-stop');
 const btnSettings = document.getElementById('btn-settings');
 const btnCloseSettings = document.getElementById('btn-close-settings');
 const btnClear    = document.getElementById('btn-clear-terminal');
+const btnToggleStdin = document.getElementById('btn-toggle-stdin');
+const btnClearStdin  = document.getElementById('btn-clear-stdin');
+const btnFunctions   = document.getElementById('btn-functions');
+const stdinPanel  = document.getElementById('stdin-panel');
+const stdinArea   = document.getElementById('stdin-textarea');
 const statusEl    = document.getElementById('status-indicator');
 const statusText  = document.getElementById('status-text');
 const exitBadge   = document.getElementById('exit-code-badge');
@@ -73,6 +77,13 @@ async function init() {
 
   // Bind UI
   bindUI();
+
+  // Init Functions panel
+  if (window.functionsPanel) {
+    zenithEditor.onReady(() => {
+      functionsPanel.init();
+    });
+  }
 
   // Keyboard shortcut
   document.addEventListener('keydown', (e) => {
@@ -171,7 +182,7 @@ function triggerRun() {
     showToast('Compiler is still loading…');
     return;
   }
-  if (isRunning || collectingInput) return;
+  if (isRunning) return;
 
   const code = zenithEditor.getCode();
   if (!code.trim()) {
@@ -179,101 +190,9 @@ function triggerRun() {
     return;
   }
 
-  // If the program reads from cin, collect stdin first
-  if (needsStdin(code)) {
-    collectStdin(code);
-  } else {
-    executeCode(code, '');
-  }
-}
-
-/**
- * Detect whether the source code uses std::cin.
- */
-function needsStdin(code) {
-  // Match `cin >>`, `std::cin >>`, `getline(cin`, `getline(std::cin`
-  return /(?:std\s*::\s*)?cin\s*>>|getline\s*\(\s*(?:std\s*::\s*)?cin/.test(code);
-}
-
-/**
- * Prompt the user to type program input in the terminal.
- * Resolves once the user submits (empty line = done, Ctrl+D = done).
- */
-function collectStdin(code) {
-  collectingInput = true;
-
-  // Disable run button while collecting
-  btnRun.disabled = true;
-  btnRun.classList.add('running');
-
-  zenithTerminal.writeStdinPrompt();
-
-  let inputLines = [];
-  let currentLine = '';
-
-  // Attach a one-time key listener on the terminal
-  const disposable = zenithTerminal.term.onKey(({ key, domEvent }) => {
-    const code_ = domEvent.keyCode;
-
-    // Ctrl+D — submit immediately (EOF)
-    if (domEvent.ctrlKey && domEvent.key === 'd') {
-      domEvent.preventDefault();
-      finish();
-      return;
-    }
-
-    // Enter — submit current line, check if done
-    if (code_ === 13) {
-      zenithTerminal.term.write('\r\n');
-      inputLines.push(currentLine);
-      currentLine = '';
-
-      // Two consecutive empty lines = done (like EOF signal)
-      if (inputLines.length >= 2 &&
-          inputLines[inputLines.length - 1] === '' &&
-          inputLines[inputLines.length - 2] === '') {
-        finish();
-        return;
-      }
-
-      // Show continuation prompt
-      zenithTerminal.writeStdinContinue();
-      return;
-    }
-
-    // Backspace
-    if (code_ === 8 || code_ === 127) {
-      if (currentLine.length > 0) {
-        currentLine = currentLine.slice(0, -1);
-        zenithTerminal.term.write('\b \b');
-      }
-      return;
-    }
-
-    // Printable characters only
-    if (key && key.length === 1 && !domEvent.ctrlKey && !domEvent.altKey) {
-      currentLine += key;
-      zenithTerminal.term.write(key);
-    }
-  });
-
-  function finish() {
-    disposable.dispose();
-    collectingInput = false;
-    btnRun.disabled = false;
-    btnRun.classList.remove('running');
-
-    // Push any remaining typed line
-    if (currentLine.length > 0) inputLines.push(currentLine);
-    // Remove trailing empty sentinel lines
-    while (inputLines.length && inputLines[inputLines.length - 1] === '') {
-      inputLines.pop();
-    }
-
-    const stdinStr = inputLines.join('\n') + (inputLines.length ? '\n' : '');
-    zenithTerminal.writeStdinDone(stdinStr);
-    executeCode(code, stdinStr);
-  }
+  // Read stdin from the textarea panel (always — user leaves it empty if not needed)
+  const stdin = stdinArea ? stdinArea.value : '';
+  executeCode(code, stdin);
 }
 
 /**
@@ -465,6 +384,17 @@ function bindUI() {
   });
   btnCloseSettings.addEventListener('click', closeSettings);
 
+  // Functions panel toggle
+  if (btnFunctions && window.functionsPanel) {
+    btnFunctions.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Close settings if open
+      if (settingsPanel.classList.contains('open')) closeSettings();
+      functionsPanel.toggle();
+      btnFunctions.classList.toggle('active', functionsPanel._isOpen);
+    });
+  }
+
   // Click outside settings to close
   document.addEventListener('click', (e) => {
     if (settingsPanel.classList.contains('open') &&
@@ -502,6 +432,50 @@ function bindUI() {
     timeoutDisplay.textContent = `${secs}s`;
     execTimeout = secs * 1000;
   });
+
+  // ── Stdin panel toggle ─────────────────────────────────────────
+  if (btnToggleStdin && stdinPanel) {
+    btnToggleStdin.addEventListener('click', () => {
+      toggleStdinPanel();
+    });
+  }
+
+  // ── Clear stdin ────────────────────────────────────────────────
+  if (btnClearStdin && stdinArea) {
+    btnClearStdin.addEventListener('click', () => {
+      stdinArea.value = '';
+      stdinArea.focus();
+    });
+  }
+
+  // ── Ctrl+Enter inside stdin textarea also triggers run ─────────
+  if (stdinArea) {
+    stdinArea.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (!isRunning) triggerRun();
+      }
+    });
+  }
+
+  // ── Auto-show stdin panel when code has cin ────────────────────
+  // (observe editor changes and hint the user)
+  let stdinAutoShown = false;
+  if (typeof zenithEditor !== 'undefined') {
+    // We check once after a short delay (editor initialises async)
+    setTimeout(() => {
+      const checkForCin = () => {
+        if (stdinAutoShown) return;
+        const code = zenithEditor.getCode ? zenithEditor.getCode() : '';
+        if (/(?:std\s*::\s*)?cin\s*>>|getline\s*\(\s*(?:std\s*::\s*)?cin/.test(code)) {
+          showStdinPanel();
+          stdinAutoShown = true;
+        }
+      };
+      // Check initially
+      checkForCin();
+    }, 600);
+  }
 
   // ── Mobile clipboard ──────────────────────────────────────────
   if (btnMobilePaste) {
