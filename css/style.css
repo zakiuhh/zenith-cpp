@@ -574,7 +574,8 @@ body {
   /* Always rendered, slid off-screen by default */
   transform: translateX(100%);
   visibility: hidden;
-  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.10);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.25), 
+              -1px 0 3px rgba(0, 0, 0, 0.15);
   transition: transform 0.28s cubic-bezier(0.16,1,0.3,1),
               visibility 0s linear 0.28s;
 }
@@ -1265,7 +1266,8 @@ body.theme-light .btn-toggle-stdin {
   z-index: 45;
   transform: translateX(-100%);
   visibility: hidden;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.10);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.25), 
+              1px 0 3px rgba(0, 0, 0, 0.15);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               visibility 0s linear 0.28s;
   overflow: hidden;
@@ -1807,4 +1809,4 @@ body.theme-light .functions-backdrop.open { background: rgba(0,0,0,0.15); }
   .fn-modal-body  { padding: 12px 14px; }
   .fn-modal-header { padding: 14px 14px 12px; }
   .fn-modal-footer { padding: 10px 14px; }
-}
+}
