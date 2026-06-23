@@ -842,6 +842,12 @@ body {
   .btn-run::after {
     display: none;
   }
+  /* Hide theme label on mobile so header fits */
+  .btn-theme .theme-label { display: none; }
+  /* Tighten header divider */
+  #app-header > div:nth-child(3) > div[style*="width:1px"] {
+    display: none;
+  }
 
   /* ── Mobile clipboard bar ── */
   #mobile-clipboard-bar {
@@ -1709,8 +1715,96 @@ body.theme-light .fn-modal-input      { background: #f5f4f0; border-color: #c8c5
 body.theme-light .fn-modal-cancel     { border-color: #c8c5bc; }
 body.theme-light .functions-backdrop.open { background: rgba(0,0,0,0.15); }
 
-/* ── Responsive ── */
+/* ── Responsive — Functions Panel ── */
+
+/* Safari / older iOS: color-mix() fallback for category badges */
+@supports not (color: color-mix(in srgb, red 10%, transparent)) {
+  .fn-cat-badge {
+    background: rgba(135, 134, 127, 0.14);
+    border-color: rgba(135, 134, 127, 0.30);
+  }
+}
+
+/* Tablet + phone: tighten panel width */
 @media (max-width: 768px) {
-  .functions-panel { width: min(100%, 340px); }
+  /* Panel takes full screen width on mobile */
+  .functions-panel {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  /* Backdrop dims more strongly on small screens */
+  .functions-backdrop.open { background: rgba(0, 0, 0, 0.50); }
+
+  /* Functions toolbar button — icon-only, same size as other icon buttons */
+  .btn-functions {
+    padding: 6px 8px;
+    min-width: 32px;
+    justify-content: center;
+  }
   .btn-functions .btn-text { display: none; }
+
+  /* Function cards — stack vertically so nothing overflows */
+  .fn-card-top {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .fn-card-info {
+    flex: 1 1 100%;
+    margin-bottom: 6px;
+  }
+  .fn-card-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .fn-insert-btn {
+    flex: 1 !important;        /* stretch Insert button full width minus action icons */
+    justify-content: center;
+  }
+
+  /* Modal: use env() safe-area so it clears iOS home bar & notch */
+  .fn-modal-overlay {
+    padding: max(16px, env(safe-area-inset-top))
+             max(16px, env(safe-area-inset-right))
+             max(16px, env(safe-area-inset-bottom))
+             max(16px, env(safe-area-inset-left));
+    align-items: flex-end;   /* sheet slides up from the bottom on phones */
+  }
+  .fn-modal-box {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 14px 14px 0 0;   /* bottom sheet style */
+    max-height: 88vh;
+    animation: fn-modal-sheet-in 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes fn-modal-sheet-in {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0);   }
+  }
+
+  /* Keep tab bar scrollable horizontally so it never wraps to two rows */
+  .fn-tab-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 6px;
+  }
+  .fn-tab-bar::-webkit-scrollbar { display: none; }
+
+  /* Slightly larger touch targets for Insert / Edit / Delete */
+  .fn-insert-btn  { min-height: 34px !important; }
+  .fn-card-action { width: 30px !important; height: 30px !important; }
+}
+
+/* Very small phones (< 400px) — extra tightening */
+@media (max-width: 400px) {
+  .fn-panel-title { font-size: 12px; }
+  .fn-search-bar  { margin: 8px 8px 4px; padding: 6px 9px; }
+  .fn-card        { padding: 8px 9px; }
+  .fn-card-name   { font-size: 11px; }
+  .fn-card-sig    { font-size: 9.5px; }
+  .fn-modal-body  { padding: 12px 14px; }
+  .fn-modal-header { padding: 14px 14px 12px; }
+  .fn-modal-footer { padding: 10px 14px; }
 }
