@@ -574,7 +574,7 @@ body {
   /* Always rendered, slid off-screen by default */
   transform: translateX(100%);
   visibility: hidden;
-  box-shadow: -16px 0 48px rgba(0,0,0,0.55);
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.10);
   transition: transform 0.28s cubic-bezier(0.16,1,0.3,1),
               visibility 0s linear 0.28s;
 }
@@ -1265,7 +1265,7 @@ body.theme-light .btn-toggle-stdin {
   z-index: 45;
   transform: translateX(-100%);
   visibility: hidden;
-  box-shadow: 16px 0 48px rgba(0, 0, 0, 0.55);
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.10);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               visibility 0s linear 0.28s;
   overflow: hidden;
