@@ -1810,3 +1810,54 @@ body.theme-light .functions-backdrop.open { background: rgba(0,0,0,0.15); }
   .fn-modal-header { padding: 14px 14px 12px; }
   .fn-modal-footer { padding: 10px 14px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE DESKTOP ONLY OVERLAY
+════════════════════════════════════════════════════════════════ */
+#mobile-desktop-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #mobile-desktop-only {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background: var(--dark-panel);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    backdrop-filter: blur(8px);
+  }
+
+  .mobile-desktop-only-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 320px;
+  }
+
+  .mobile-desktop-only-content svg {
+    margin-bottom: 8px;
+    color: var(--terracotta);
+  }
+
+  .mobile-desktop-only-content h2 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    color: var(--ivory);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .mobile-desktop-only-content p {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--stone);
+    margin: 0;
+  }
+}
